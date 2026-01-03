@@ -1,26 +1,446 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* ═══════════════════════════════════════════════════════════════
+       ✦ EMBER & SMOKE ✦
+       A luxurious coffee house aesthetic
+       Deep espresso darkness, latte foam text, burnished copper glow
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* Espresso Bean - Deep, rich, almost black with warm undertones */
+    --background: 20 35% 4%;
+    /* Latte Foam - Warm cream with golden warmth */
+    --foreground: 38 45% 88%;
+
+    /* Roasted Bean Card - Slightly lifted from background */
+    --card: 22 30% 8%;
+    --card-foreground: 40 40% 92%;
+
+    /* Steam Wisps - Ethereal popover surfaces */
+    --popover: 18 28% 6%;
+    --popover-foreground: 38 42% 90%;
+
+    /* Burnished Copper - Premium metallic primary */
+    --primary: 25 85% 58%;
+    --primary-foreground: 20 35% 4%;
+
+    /* Charred Oak - Deep warm secondary */
+    --secondary: 15 20% 14%;
+    --secondary-foreground: 38 40% 85%;
+
+    /* Ash & Ember - Muted warmth */
+    --muted: 18 18% 12%;
+    --muted-foreground: 25 20% 55%;
+
+    /* Aged Leather - Rich burgundy accent */
+    --accent: 350 45% 35%;
+    --accent-foreground: 38 45% 92%;
+
+    /* Cherry Note - Coffee's fruity undertone for destructive */
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 38 45% 92%;
+
+    /* Smoke borders - Subtle, refined edges */
+    --border: 20 15% 18%;
+    --input: 22 18% 15%;
+    --ring: 25 80% 55%;
+
+    --radius: 0.625rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Algorithmic Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary/50 rounded-full hover:bg-primary/50 transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .font-syne {
+    font-family: var(--font-syne), sans-serif;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ PREMIUM GLASSMORPHISM ✦
+     Layered depth with coffee house warmth
+     ═══════════════════════════════════════════════════════════════ */
+
+  .glass {
+    @apply backdrop-blur-xl border border-white/[0.08];
+    background: linear-gradient(135deg,
+        hsl(20 30% 8% / 0.85) 0%,
+        hsl(22 25% 6% / 0.9) 100%);
+    box-shadow:
+      0 4px 24px -4px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .glass-card {
+    @apply backdrop-blur-2xl border border-white/[0.06];
+    background: linear-gradient(160deg,
+        hsl(22 28% 10% / 0.95) 0%,
+        hsl(18 24% 7% / 0.98) 100%);
+    box-shadow:
+      0 8px 32px -8px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 200, 150, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-3xl border border-white/[0.04];
+    background: linear-gradient(180deg,
+        hsl(20 32% 6% / 0.92) 0%,
+        hsl(18 28% 4% / 0.96) 50%,
+        hsl(16 25% 3% / 0.98) 100%);
+    box-shadow:
+      0 24px 48px -12px rgba(0, 0, 0, 0.7),
+      0 0 80px -20px rgba(180, 100, 50, 0.1),
+      inset 0 1px 0 rgba(255, 220, 180, 0.05);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ BURNISHED COPPER GRADIENTS ✦
+     Premium metallic text effects
+     ═══════════════════════════════════════════════════════════════ */
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background: linear-gradient(135deg,
+        hsl(25 90% 65%) 0%,
+        hsl(35 80% 75%) 25%,
+        hsl(30 85% 68%) 50%,
+        hsl(20 75% 60%) 75%,
+        hsl(28 90% 70%) 100%);
+    background-size: 300% 300%;
+    animation: copper-shimmer 8s ease-in-out infinite;
+  }
+
+  .text-gradient-cream {
+    @apply bg-clip-text text-transparent;
+    background: linear-gradient(90deg,
+        hsl(38 50% 92%) 0%,
+        hsl(35 60% 85%) 50%,
+        hsl(40 45% 90%) 100%);
+  }
+
+  .text-gradient-ember {
+    @apply bg-clip-text text-transparent;
+    background: linear-gradient(45deg,
+        hsl(15 80% 50%) 0%,
+        hsl(30 90% 60%) 30%,
+        hsl(40 85% 65%) 60%,
+        hsl(25 80% 55%) 100%);
+    background-size: 200% 200%;
+    animation: ember-pulse 4s ease-in-out infinite;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ COFFEE GRAIN TEXTURE ✦
+     Subtle organic paper-like noise
+     ═══════════════════════════════════════════════════════════════ */
+
+  .bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ PREMIUM INPUT STYLING ✦
+     Refined, tactile form elements
+     ═══════════════════════════════════════════════════════════════ */
+
+  .input-premium {
+    @apply bg-secondary/40 border border-white/[0.06] rounded-lg;
+    @apply focus:border-primary/40 focus:bg-secondary/60;
+    @apply focus:ring-2 focus:ring-primary/20 focus:ring-offset-0;
+    @apply transition-all duration-300 ease-out;
+    @apply placeholder:text-muted-foreground/40;
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .input-premium:focus {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.15),
+      0 0 0 3px rgba(180, 100, 50, 0.1),
+      0 0 20px -5px rgba(180, 100, 50, 0.2);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ COPPER BORDER ACCENTS ✦
+     Elegant metallic edge treatment
+     ═══════════════════════════════════════════════════════════════ */
+
+  .border-gradient {
+    position: relative;
+    border: 1px solid transparent;
+    background: linear-gradient(hsl(22 30% 8%), hsl(22 30% 8%)) padding-box,
+      linear-gradient(135deg,
+        rgba(255, 180, 120, 0.2) 0%,
+        rgba(180, 100, 50, 0.4) 50%,
+        rgba(255, 200, 150, 0.15) 100%) border-box;
+  }
+
+  .border-ember {
+    border: 1px solid;
+    border-image: linear-gradient(135deg,
+        hsl(25 70% 45% / 0.6) 0%,
+        hsl(35 60% 55% / 0.3) 50%,
+        hsl(20 65% 40% / 0.5) 100%) 1;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ SIGNATURE ANIMATIONS ✦
+     Award-winning motion design
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Copper Shimmer - Premium metallic effect */
+  @keyframes copper-shimmer {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Ember Pulse - Warm, living glow */
+  @keyframes ember-pulse {
+
+    0%,
+    100% {
+      background-position: 0% 0%;
+      filter: brightness(1);
+    }
+
+    50% {
+      background-position: 100% 100%;
+      filter: brightness(1.15);
+    }
+  }
+
+  .animate-gradient {
+    animation: copper-shimmer 6s ease infinite;
+  }
+
+  /* Steam Rise - Ethereal vertical movement */
+  @keyframes steam-rise {
+    0% {
+      transform: translateY(0) scaleX(1);
+      opacity: 0.6;
+    }
+
+    50% {
+      transform: translateY(-15px) scaleX(1.05);
+      opacity: 0.8;
+    }
+
+    100% {
+      transform: translateY(-30px) scaleX(0.95);
+      opacity: 0;
+    }
+  }
+
+  .animate-steam {
+    animation: steam-rise 3s ease-out infinite;
+  }
+
+  /* Float - Gentle hovering */
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+      transform: translateY(-6px) rotate(0.5deg);
+    }
+
+    75% {
+      transform: translateY(-3px) rotate(-0.5deg);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Ember Glow - Pulsing warmth */
+  @keyframes ember-glow {
+
+    0%,
+    100% {
+      box-shadow:
+        0 0 20px -5px rgba(200, 100, 50, 0.3),
+        0 0 40px -10px rgba(180, 80, 40, 0.2);
+    }
+
+    50% {
+      box-shadow:
+        0 0 30px -5px rgba(220, 120, 60, 0.5),
+        0 0 60px -10px rgba(200, 100, 50, 0.3);
+    }
+  }
+
+  .animate-ember-glow {
+    animation: ember-glow 4s ease-in-out infinite;
+  }
+
+  /* Coffee Ripple - Concentric waves */
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+
+    100% {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+
+  .animate-ripple {
+    animation: ripple 2s ease-out infinite;
+  }
+
+  /* Pour - Smooth cascading */
+  @keyframes pour {
+    0% {
+      clip-path: inset(100% 0 0 0);
+      opacity: 0;
+    }
+
+    100% {
+      clip-path: inset(0 0 0 0);
+      opacity: 1;
+    }
+  }
+
+  .animate-pour {
+    animation: pour 0.8s ease-out forwards;
+  }
+
+  /* Roast - Color temperature shift */
+  @keyframes roast {
+
+    0%,
+    100% {
+      filter: hue-rotate(0deg) saturate(1);
+    }
+
+    50% {
+      filter: hue-rotate(-10deg) saturate(1.15);
+    }
+  }
+
+  .animate-roast {
+    animation: roast 8s ease-in-out infinite;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ HOVER EFFECTS ✦
+     Tactile, responsive interactions
+     ═══════════════════════════════════════════════════════════════ */
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 12px 40px -12px rgba(180, 100, 50, 0.25),
+      0 4px 16px -4px rgba(0, 0, 0, 0.3);
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-glow:hover {
+    box-shadow:
+      0 0 30px -8px rgba(200, 120, 60, 0.4),
+      0 0 60px -15px rgba(180, 100, 50, 0.2);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✦ DECORATIVE ELEMENTS ✦
+     Atmospheric background effects
+     ═══════════════════════════════════════════════════════════════ */
+
+  .bg-radial-warm {
+    background: radial-gradient(ellipse at 50% 0%,
+        hsl(25 50% 12% / 0.5) 0%,
+        transparent 60%);
+  }
+
+  .bg-radial-glow {
+    background: radial-gradient(circle at 50% 50%,
+        hsl(28 60% 20% / 0.15) 0%,
+        transparent 50%);
+  }
+
+  .bg-vignette {
+    box-shadow: inset 0 0 150px 50px rgba(0, 0, 0, 0.4);
+  }
 }
