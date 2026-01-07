@@ -137,7 +137,7 @@ export function LogCard({ log }: { log: LogWithRelations }) {
                         onClick={() => setIsEditingNotes(true)}
                         className="bg-secondary/50 p-3 rounded-md text-xs text-muted-foreground italic border border-white/5 cursor-pointer hover:bg-secondary/70 hover:border-primary/30 transition-colors relative group"
                     >
-                        "{notes || 'No notes recorded.'}"
+                        {`"${notes || 'No notes recorded.'}"`}
                         <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <span className="text-[10px] bg-primary/20 text-primary px-1 rounded">Edit</span>
                         </div>

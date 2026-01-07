@@ -52,7 +52,12 @@ export function BeanPicker({ selectedBeanId, onSelect }: BeanPickerProps) {
                     {beans.map((bean) => (
                         <SelectItem key={bean.id} value={bean.id} className="focus:bg-primary/20 focus:text-primary cursor-pointer">
                             <span className="font-medium">{bean.name}</span>
-                            {bean.roaster && <span className="text-muted-foreground ml-2 text-xs opacity-70">// {bean.roaster}</span>}
+                            {bean.roaster && (
+                                <span className="text-muted-foreground ml-2 text-xs opacity-70">
+                                    {'// '}
+                                    {bean.roaster}
+                                </span>
+                            )}
                         </SelectItem>
                     ))}
                 </SelectContent>

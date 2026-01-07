@@ -25,10 +25,7 @@ npm install
 Create a `.env.local` file in the project root. These variables are required by Supabase and Next.js server components:
 
 ```bash
-cp .env.example .env.local   # if an example file exists
-# otherwise create it manually:
-echo "NEXT_PUBLIC_SUPABASE_URL=your-project-url" >> .env.local
-echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key" >> .env.local
+cp .env.example .env.local
 ```
 
 At minimum you need:
@@ -104,7 +101,8 @@ docs/              # Project & review docs
 1. Run `npm run build` locally; fix any errors.
 2. Push to the `main` (or release) branch.
 3. Deploy to Vercel/Netlify with the same environment variables you used locally.
-4. Run Supabase migrations on the production database before exposing new schema-dependent features.
+4. In Supabase Dashboard -> Authentication -> URL Configuration, add your deployment URL.
+5. Run Supabase migrations on the production database before exposing new schema-dependent features.
 
 ---
 

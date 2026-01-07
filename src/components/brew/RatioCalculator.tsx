@@ -19,11 +19,14 @@ export function RatioCalculator({ dose, ratio, onDoseChange, onRatioChange }: Ra
     const targetWater = dose * ratio
     const ratioLabel = Number.isFinite(ratio) && ratio > 0 ? ratio.toFixed(1) : '--'
 
-    const clampRatio = (value: number) => Math.max(1, Math.min(30, value || 1))
+    const normalizeRatio = (value: number) => {
+        const clamped = Math.max(1, Math.min(30, value || 1))
+        return Math.round(clamped * 2) / 2
+    }
 
     const handleSliderChange = (values: number[]) => {
         if (!values.length) return
-        onRatioChange(clampRatio(values[0]))
+        onRatioChange(normalizeRatio(values[0]))
     }
 
     return (
@@ -58,7 +61,7 @@ export function RatioCalculator({ dose, ratio, onDoseChange, onRatioChange }: Ra
                         className="bg-black/40 border-white/10 h-12 text-lg tracking-wide"
                         value={dose || ''}
                         onChange={(e) => onDoseChange(parseFloat(e.target.value) || 0)}
-                        step={0.1}
+                        step={0.5}
                     />
                 </div>
                 <div className="space-y-3">
@@ -68,7 +71,7 @@ export function RatioCalculator({ dose, ratio, onDoseChange, onRatioChange }: Ra
                         type="number"
                         className="bg-black/40 border-white/10 h-12 text-lg tracking-wide"
                         value={ratio || ''}
-                        onChange={(e) => onRatioChange(clampRatio(parseFloat(e.target.value)))}
+                        onChange={(e) => onRatioChange(normalizeRatio(parseFloat(e.target.value)))}
                         step={0.1}
                     />
                 </div>

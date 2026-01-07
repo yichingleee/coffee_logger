@@ -234,7 +234,7 @@ export function BeanLogsDialog({ bean, children }: BeanLogsDialogProps) {
 
                                             {log.notes && (
                                                 <div className="bg-black/20 rounded p-3 text-sm italic text-gray-400">
-                                                    "{log.notes}"
+                                                    {`"${log.notes}"`}
                                                 </div>
                                             )}
                                         </div>

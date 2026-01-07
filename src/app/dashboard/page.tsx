@@ -5,6 +5,7 @@ import LogoutButton from '@/components/layout/LogoutButton'
 import { SettingsToggle } from '@/components/layout/SettingsToggle'
 import { BrewWorkflow } from '@/components/brew/BrewWorkflow'
 import { LogFeed } from '@/components/dashboard/LogFeed'
+import { SilkBackground } from '@/components/dashboard/SilkBackground'
 import { Bean, Cog, Beaker } from 'lucide-react'
 
 export default async function DashboardPage() {
@@ -28,11 +29,10 @@ export default async function DashboardPage() {
     const displayName = profile?.username || user.email?.split('@')[0]
 
     return (
-        <div className="min-h-screen bg-background text-foreground pb-20">
-            {/* Ambient Background Glow */}
-            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background pointer-events-none" />
+        <div className="min-h-screen bg-[#050505] text-foreground pb-20 relative">
+            <SilkBackground />
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
                     <div>
@@ -106,16 +106,12 @@ export default async function DashboardPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:items-start">
                     {/* Main Workflow - Takes up 2 columns */}
-                    <div className="lg:col-span-2 lg:flex lg:flex-col lg:h-[calc(100vh-16rem)]">
-                        <div className="pb-2 flex-shrink-0">
-                            <h2 className="text-2xl font-bold flex items-center gap-3">
-                                <span className="w-2 h-8 bg-primary rounded-full" />
-                                NEW BREW
-                            </h2>
-                        </div>
-                        <div className="flex-1 lg:overflow-y-auto lg:pr-4 pt-6">
-                            <BrewWorkflow />
-                        </div>
+                    <div className="lg:col-span-2 space-y-4">
+                        <h2 className="text-2xl font-bold flex items-center gap-3">
+                            <span className="w-2 h-8 bg-primary rounded-full" />
+                            NEW BREW
+                        </h2>
+                        <BrewWorkflow />
                     </div>
 
                     {/* Recent Logs - 1 Column */}

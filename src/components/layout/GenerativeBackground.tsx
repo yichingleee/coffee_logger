@@ -130,6 +130,8 @@ const GenerativeBackground = () => {
         <canvas
             ref={canvasRef}
             className="fixed top-0 left-0 w-full h-full pointer-events-none z-[-5]"
+            style={{ pointerEvents: 'none' }}
+            aria-hidden="true"
         />
     );
 };

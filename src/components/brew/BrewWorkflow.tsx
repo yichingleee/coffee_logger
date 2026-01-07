@@ -27,7 +27,7 @@ export function BrewWorkflow() {
     const [selectedMethodId, setSelectedMethodId] = useState('')
     const [grindSetting, setGrindSetting] = useState('')
     const [dose, setDose] = useState(15) // Default 15g
-    const [ratio, setRatio] = useState(17) // Default 1:17
+    const [ratio, setRatio] = useState(18) // Default 1:18
     const [bloomTime, setBloomTime] = useState<string>('')
     const [totalMinutes, setTotalMinutes] = useState<string>('')
     const [totalSeconds, setTotalSeconds] = useState<string>('')
@@ -185,11 +185,11 @@ export function BrewWorkflow() {
                         )}
 
                         {step === 3 && (
-                            <div className="rounded-3xl border border-white/10 bg-black/40 p-6 space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="bloom-time" className="text-xs uppercase tracking-[0.5em] text-muted-foreground">
-                                            Bloom Duration (seconds)
+                            <div className="rounded-3xl border border-white/10 bg-black/40 p-6 space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="md:col-span-1 space-y-2">
+                                        <Label htmlFor="bloom-time" className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
+                                            Bloom
                                         </Label>
                                         <Input
                                             id="bloom-time"
@@ -198,34 +198,39 @@ export function BrewWorkflow() {
                                             value={bloomTime}
                                             onChange={(e) => setBloomTime(e.target.value)}
                                             placeholder="e.g. 45"
-                                            className="h-12 bg-black/50 border-white/10"
+                                            className="h-14 text-lg bg-black/50 border-white/10 px-4 rounded-xl"
                                         />
+                                        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Seconds</p>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <Label className="text-xs uppercase tracking-[0.5em] text-muted-foreground">
+                                    <div className="md:col-span-2 space-y-2">
+                                        <Label className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
                                             Total Brew Time
                                         </Label>
                                         <div className="flex gap-3 items-center">
-                                            <Input
-                                                type="number"
-                                                min="0"
-                                                value={totalMinutes}
-                                                onChange={(e) => setTotalMinutes(e.target.value)}
-                                                placeholder="0"
-                                                className="h-12 bg-black/50 border-white/10"
-                                            />
-                                            <span className="text-xs uppercase tracking-[0.5em] text-muted-foreground">min</span>
-                                            <Input
-                                                type="number"
-                                                min="0"
-                                                max="59"
-                                                value={totalSeconds}
-                                                onChange={(e) => setTotalSeconds(e.target.value)}
-                                                placeholder="0"
-                                                className="h-12 bg-black/50 border-white/10"
-                                            />
-                                            <span className="text-xs uppercase tracking-[0.5em] text-muted-foreground">sec</span>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    value={totalMinutes}
+                                                    onChange={(e) => setTotalMinutes(e.target.value)}
+                                                    placeholder="0"
+                                                    className="h-14 w-20 text-lg text-center bg-black/50 border-white/10 rounded-xl"
+                                                />
+                                                <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">MIN</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    max="59"
+                                                    value={totalSeconds}
+                                                    onChange={(e) => setTotalSeconds(e.target.value)}
+                                                    placeholder="0"
+                                                    className="h-14 w-20 text-lg text-center bg-black/50 border-white/10 rounded-xl"
+                                                />
+                                                <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">SEC</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

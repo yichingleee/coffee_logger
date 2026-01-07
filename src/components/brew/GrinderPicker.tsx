@@ -31,15 +31,20 @@ export function GrinderPicker({ selectedGrinderId, onSelect, grindSetting, onSet
 
             if (data) {
                 setGrinders(data)
-                // If only one grinder exists and none selected, select it automatically
-                if (data.length === 1 && !selectedGrinderId) {
-                    onSelect(data[0].id)
-                }
             }
             setLoading(false)
         }
         fetchGrinders()
     }, [])
+
+    useEffect(() => {
+        if (loading) {
+            return
+        }
+        if (grinders.length === 1 && !selectedGrinderId) {
+            onSelect(grinders[0].id)
+        }
+    }, [grinders, loading, onSelect, selectedGrinderId])
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

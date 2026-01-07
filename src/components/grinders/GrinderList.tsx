@@ -41,10 +41,10 @@ export function GrinderList({ grinders }: GrinderListProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {grinders.map((grinder) => (
                 <Card key={grinder.id} className="bg-card/40 backdrop-blur-sm border-white/5 group relative hover:border-primary/50 transition-colors">
-                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pt-4 pb-3">
                         <div>
                             <CardTitle className="text-lg font-display tracking-wide">{grinder.name}</CardTitle>
-                            <CardDescription className="capitalize text-xs mt-1">
+                            <CardDescription className="capitalize text-xs mt-0.5">
                                 {grinder.type} {grinder.setting_type ? `• ${grinder.setting_type}` : ''}
                             </CardDescription>
                         </div>
