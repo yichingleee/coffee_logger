@@ -29,10 +29,10 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-          <Link href="/login" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl shadow-[0_0_20px_-5px_hsl(var(--primary))] hover:shadow-[0_0_30px_-5px_hsl(var(--primary))] hover:scale-105 transition-all uppercase tracking-widest text-lg">
+          <Link href="/login" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl shadow-[0_0_20px_-5px_hsl(var(--primary))] hover:shadow-[0_0_30px_-5px_hsl(var(--primary))] hover:scale-105 transition-all uppercase tracking-widest text-lg flex items-center justify-center">
             Initialize
           </Link>
-          <Link href="/signup" className="px-8 py-4 glass-panel text-foreground font-bold rounded-xl hover:bg-secondary/40 border border-white/10 hover:border-white/20 transition-all uppercase tracking-widest text-lg backdrop-blur-sm">
+          <Link href="/signup" className="px-8 py-4 glass-panel text-foreground font-bold rounded-xl hover:bg-secondary/40 border border-white/10 hover:border-white/20 transition-all uppercase tracking-widest text-lg backdrop-blur-sm flex items-center justify-center">
             Create Access
           </Link>
         </div>
