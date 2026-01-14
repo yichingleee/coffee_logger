@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 
-const SEED = 'dashboard-linefield'
+const DEFAULT_SEED = 'dashboard-linefield'
 
 const CONFIG = {
     lineCount: 36,
@@ -75,7 +76,13 @@ const noise2D = (x: number, y: number, seed: number) => {
     return lerp(nx0, nx1, v)
 }
 
-export function SilkBackground() {
+type SilkBackgroundProps = {
+    seed?: string
+    opacity?: number
+    className?: string
+}
+
+export function SilkBackground({ seed = DEFAULT_SEED, opacity = 0.9, className }: SilkBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -89,7 +96,7 @@ export function SilkBackground() {
             return
         }
 
-        const seedValue = hashSeed(SEED)
+        const seedValue = hashSeed(seed)
         const rng = mulberry32(seedValue)
         const pointer = { x: 0, y: 0 }
         const targetPointer = { x: 0, y: 0 }
@@ -257,8 +264,8 @@ export function SilkBackground() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 z-0 opacity-90 pointer-events-none"
-            style={{ pointerEvents: 'none' }}
+            className={cn('fixed inset-0 z-0 pointer-events-none', className)}
+            style={{ pointerEvents: 'none', opacity }}
             aria-hidden="true"
         />
     )
