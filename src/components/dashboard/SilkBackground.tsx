@@ -259,7 +259,7 @@ export function SilkBackground({ seed = DEFAULT_SEED, opacity = 0.9, className }
             document.removeEventListener('visibilitychange', handleVisibility)
             reduceMotionQuery.removeEventListener('change', handleReduceMotion)
         }
-    }, [])
+    }, [seed])
 
     return (
         <canvas
@@ -270,3 +270,5 @@ export function SilkBackground({ seed = DEFAULT_SEED, opacity = 0.9, className }
         />
     )
 }
+
+export default SilkBackground

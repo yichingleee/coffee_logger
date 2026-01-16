@@ -1,11 +1,5 @@
 import { format } from 'date-fns'
-import { Database } from '@/types/database.types'
-
-type LogWithRelations = Database['public']['Tables']['logs']['Row'] & {
-    beans: { name: string; roaster: string | null } | null
-    grinders: { name: string } | null
-    methods: { name: string } | null
-}
+import { LogWithRelations } from '@/types/logs'
 
 export function generateLogSummary(log: LogWithRelations): string {
     const date = format(new Date(log.created_at), 'MMM d, yyyy')

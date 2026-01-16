@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
@@ -6,21 +7,27 @@ import LogoutButton from '@/components/layout/LogoutButton'
 import { LogHistory } from '@/components/logs/LogHistory'
 
 export default async function LogsPage() {
-    const supabase = await createClient()
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getUser()
 
     if (!user) {
         redirect('/login')
     }
 
+    const supabase = await createClient()
+
     // Fetch ALL logs for the history page
     const { data: logs } = await supabase
         .from('logs')
         .select(`
-            *,
+            id,
+            created_at,
+            device,
+            grind_setting,
+            dose,
+            ratio,
+            bloom_time,
+            total_time,
+            notes,
             beans (
                 name,
                 roaster
@@ -35,8 +42,15 @@ export default async function LogsPage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
+    const normalizedLogs = (logs || []).map((log) => ({
+        ...log,
+        beans: Array.isArray(log.beans) ? log.beans[0] ?? null : log.beans,
+        grinders: Array.isArray(log.grinders) ? log.grinders[0] ?? null : log.grinders,
+        methods: Array.isArray(log.methods) ? log.methods[0] ?? null : log.methods,
+    }))
+
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <main id="main" tabIndex={-1} className="min-h-screen bg-background text-foreground">
             {/* Ambient Background Glow */}
             <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/5 via-background to-background pointer-events-none" />
 
@@ -44,8 +58,12 @@ export default async function LogsPage() {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-12">
                     <div className="flex items-center gap-6">
-                        <Link href="/dashboard" className="p-3 hover:bg-white/5 rounded-full transition-colors border border-transparent hover:border-white/10 group">
-                            <ChevronLeft className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                        <Link
+                            href="/dashboard"
+                            aria-label="Back to dashboard"
+                            className="p-3 hover:bg-white/5 rounded-full transition-colors border border-transparent hover:border-white/10 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        >
+                            <ChevronLeft className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
                         </Link>
                         <div className="flex flex-col">
                             <h1 className="text-4xl font-display font-bold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
@@ -60,8 +78,8 @@ export default async function LogsPage() {
                 </div>
 
                 {/* Main Content */}
-                <LogHistory initialLogs={logs || []} />
+                <LogHistory initialLogs={normalizedLogs} />
             </div>
-        </div>
+        </main>
     )
 }

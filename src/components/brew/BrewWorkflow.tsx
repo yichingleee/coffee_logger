@@ -12,6 +12,7 @@ import { GrinderPicker } from '@/components/brew/GrinderPicker'
 import { MethodPicker } from '@/components/brew/MethodPicker'
 import { submitBrewLog } from '@/lib/actions/brew'
 import { useRouter } from 'next/navigation'
+import { Database } from '@/types/database.types'
 
 const stepConfig = [
     { id: 'bean', title: 'Bean Protocol' },
@@ -20,7 +21,17 @@ const stepConfig = [
     { id: 'extraction', title: 'Extraction Timing' },
 ]
 
-export function BrewWorkflow() {
+type BeanOption = Pick<Database['public']['Tables']['beans']['Row'], 'id' | 'name' | 'roaster'>
+type MethodOption = Pick<Database['public']['Tables']['methods']['Row'], 'id' | 'name'>
+type GrinderOption = Pick<Database['public']['Tables']['grinders']['Row'], 'id' | 'name'>
+
+interface BrewWorkflowProps {
+    beans?: BeanOption[]
+    methods?: MethodOption[]
+    grinders?: GrinderOption[]
+}
+
+export function BrewWorkflow({ beans = [], methods = [], grinders = [] }: BrewWorkflowProps) {
     const [step, setStep] = useState(0)
     const [selectedBeanId, setSelectedBeanId] = useState('')
     const [selectedGrinderId, setSelectedGrinderId] = useState('')
@@ -149,7 +160,7 @@ export function BrewWorkflow() {
                                     <Sparkles className="h-4 w-4 text-primary" />
                                     Select Bean Protocol
                                 </div>
-                                <BeanPicker selectedBeanId={selectedBeanId} onSelect={setSelectedBeanId} />
+                                <BeanPicker beans={beans} selectedBeanId={selectedBeanId} onSelect={setSelectedBeanId} />
                             </div>
                         )}
 
@@ -158,11 +169,12 @@ export function BrewWorkflow() {
                                 <div className="grid gap-6">
                                     <div>
                                         <p className="text-xs uppercase tracking-[0.5em] text-muted-foreground mb-2">Method</p>
-                                        <MethodPicker selectedMethodId={selectedMethodId} onSelect={setSelectedMethodId} />
+                                        <MethodPicker methods={methods} selectedMethodId={selectedMethodId} onSelect={setSelectedMethodId} />
                                     </div>
                                     <div>
                                         <p className="text-xs uppercase tracking-[0.5em] text-muted-foreground mb-2">Grinder & Setting</p>
                                         <GrinderPicker
+                                            grinders={grinders}
                                             selectedGrinderId={selectedGrinderId}
                                             onSelect={setSelectedGrinderId}
                                             grindSetting={grindSetting}

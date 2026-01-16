@@ -4,19 +4,13 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Copy, Check, Pencil } from 'lucide-react'
-import { Database } from '@/types/database.types'
+import { LogWithRelations } from '@/types/logs'
 import { formatDistanceToNow } from 'date-fns'
 import { generateLogSummary } from '@/lib/log-summary'
 import { DeleteButton } from '@/components/common/DeleteButton'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { EditLogDialog } from '@/components/pantry/EditLogDialog'
-
-type LogWithRelations = Database['public']['Tables']['logs']['Row'] & {
-    beans: { name: string; roaster: string | null } | null
-    grinders: { name: string } | null
-    methods: { name: string } | null
-}
 
 export function LogCard({ log }: { log: LogWithRelations }) {
     const [copied, setCopied] = useState(false)
@@ -63,7 +57,10 @@ export function LogCard({ log }: { log: LogWithRelations }) {
     }
 
     return (
-        <Card className="hover:border-primary/50 transition-colors group relative bg-card/40 backdrop-blur-sm border-white/5">
+        <Card
+            className="hover:border-primary/50 transition-colors group relative bg-card/40 backdrop-blur-sm border-white/5"
+            style={{ contentVisibility: 'auto', containIntrinsicSize: '320px 280px' }}
+        >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b border-white/5">
                 <div>
                     <CardTitle className="text-base font-bold text-foreground font-display tracking-wide uppercase">

@@ -1,38 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Database } from '@/types/database.types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 
-type Bean = Database['public']['Tables']['beans']['Row']
+type Bean = Pick<Database['public']['Tables']['beans']['Row'], 'id' | 'name' | 'roaster'>
 
 interface BeanPickerProps {
+    beans: Bean[]
     selectedBeanId?: string
     onSelect: (beanId: string) => void
 }
 
-export function BeanPicker({ selectedBeanId, onSelect }: BeanPickerProps) {
-    const [beans, setBeans] = useState<Bean[]>([])
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const fetchBeans = async () => {
-            const supabase = createClient()
-            const { data } = await supabase
-                .from('beans')
-                .select('*')
-                .eq('is_active', true)
-                .order('name')
-
-            if (data) {
-                setBeans(data)
-            }
-            setLoading(false)
-        }
-        fetchBeans()
-    }, [])
+export function BeanPicker({ beans, selectedBeanId, onSelect }: BeanPickerProps) {
+    const isEmpty = beans.length === 0
 
     return (
         <div className="space-y-3 group">
@@ -40,13 +21,12 @@ export function BeanPicker({ selectedBeanId, onSelect }: BeanPickerProps) {
             <Select
                 value={selectedBeanId}
                 onValueChange={onSelect}
-                disabled={loading}
             >
                 <SelectTrigger id="bean-select" className="w-full h-12 bg-secondary/20 border-white/10 hover:bg-secondary/40 hover:border-primary/50 transition-all duration-300 backdrop-blur-sm">
-                    <SelectValue placeholder={loading ? "Initializing..." : "Select Bean Protocol..."} />
+                    <SelectValue placeholder={isEmpty ? "No active beans" : "Select Bean Protocol..."} />
                 </SelectTrigger>
                 <SelectContent className="bg-card/95 backdrop-blur-xl border-white/10">
-                    {beans.length === 0 && !loading && (
+                    {isEmpty && (
                         <div className="p-4 text-sm text-muted-foreground text-center">No active beans found.</div>
                     )}
                     {beans.map((bean) => (

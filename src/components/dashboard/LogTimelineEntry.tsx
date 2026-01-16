@@ -3,19 +3,13 @@
 import React, { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Copy, Check, Pencil, MessageSquare } from 'lucide-react'
-import { Database } from '@/types/database.types'
+import { LogWithRelations } from '@/types/logs'
 import { formatDistanceToNow } from 'date-fns'
 import { generateLogSummary } from '@/lib/log-summary'
 import { DeleteButton } from '@/components/common/DeleteButton'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { EditLogDialog } from '@/components/pantry/EditLogDialog'
-
-type LogWithRelations = Database['public']['Tables']['logs']['Row'] & {
-    beans: { name: string; roaster: string | null } | null
-    grinders: { name: string } | null
-    methods: { name: string } | null
-}
 
 const hashString = (value: string) => {
     let hash = 0

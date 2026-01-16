@@ -1,35 +1,59 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import LogoutButton from '@/components/layout/LogoutButton'
 import { SettingsToggle } from '@/components/layout/SettingsToggle'
 import { BrewWorkflow } from '@/components/brew/BrewWorkflow'
 import { LogFeed } from '@/components/dashboard/LogFeed'
-import { SilkBackground } from '@/components/dashboard/SilkBackground'
 import { Bean, Cog, Beaker } from 'lucide-react'
+import { getProfile, getUser } from '@/lib/supabase/auth'
+
+const SilkBackground = dynamic(
+    () => import('@/components/dashboard/SilkBackground'),
+    { ssr: false }
+)
 
 export default async function DashboardPage() {
-    const supabase = await createClient()
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getUser()
 
     if (!user) {
         redirect('/login')
     }
 
-    // Fetch user profile
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
+    const supabase = await createClient()
+
+    const beansPromise = supabase
+        .from('beans')
+        .select('id, name, roaster')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('name')
+
+    const methodsPromise = supabase
+        .from('methods')
+        .select('id, name')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('name')
+
+    const grindersPromise = supabase
+        .from('grinders')
+        .select('id, name')
+        .eq('user_id', user.id)
+        .order('name')
+
+    const [
+        profile,
+        { data: beans },
+        { data: methods },
+        { data: grinders },
+    ] = await Promise.all([getProfile(user.id), beansPromise, methodsPromise, grindersPromise])
 
     const displayName = profile?.username || user.email?.split('@')[0]
 
     return (
-        <div className="min-h-screen bg-[#050505] text-foreground pb-20 relative">
+        <main id="main" tabIndex={-1} className="min-h-screen bg-[#050505] text-foreground pb-20 relative">
             <SilkBackground />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -52,14 +76,14 @@ export default async function DashboardPage() {
 
                 {/* Quick Actions Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                    <Link href="/pantry" className="group">
-                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.3)] h-full">
+                    <Link href="/pantry" className="group rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-colors transition-shadow duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.3)] h-full">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Bean className="h-24 w-24 -rotate-12" />
+                                <Bean className="h-24 w-24 -rotate-12" aria-hidden="true" />
                             </div>
                             <div className="relative z-10 flex items-center gap-4">
                                 <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
-                                    <Bean className="h-6 w-6" />
+                                    <Bean className="h-6 w-6" aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-display font-bold uppercase tracking-wide">Pantry</h3>
@@ -69,14 +93,14 @@ export default async function DashboardPage() {
                         </div>
                     </Link>
 
-                    <Link href="/methods" className="group">
-                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.3)] h-full">
+                    <Link href="/methods" className="group rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-colors transition-shadow duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.3)] h-full">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Beaker className="h-24 w-24 -rotate-12" />
+                                <Beaker className="h-24 w-24 -rotate-12" aria-hidden="true" />
                             </div>
                             <div className="relative z-10 flex items-center gap-4">
                                 <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-300">
-                                    <Beaker className="h-6 w-6" />
+                                    <Beaker className="h-6 w-6" aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-display font-bold uppercase tracking-wide">Methods</h3>
@@ -86,14 +110,14 @@ export default async function DashboardPage() {
                         </div>
                     </Link>
 
-                    <Link href="/grinders" className="group">
-                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-all duration-300 hover:border-accent/50 hover:shadow-[0_0_30px_-10px_hsl(var(--accent)/0.3)] h-full">
+                    <Link href="/grinders" className="group rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                        <div className="relative overflow-hidden rounded-2xl bg-card border border-white/5 p-8 transition-colors transition-shadow duration-300 hover:border-accent/50 hover:shadow-[0_0_30px_-10px_hsl(var(--accent)/0.3)] h-full">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Cog className="h-24 w-24 -rotate-12" />
+                                <Cog className="h-24 w-24 -rotate-12" aria-hidden="true" />
                             </div>
                             <div className="relative z-10 flex items-center gap-4">
                                 <div className="p-3 rounded-xl bg-accent/10 text-accent group-hover:scale-110 transition-transform duration-300">
-                                    <Cog className="h-6 w-6" />
+                                    <Cog className="h-6 w-6" aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-display font-bold uppercase tracking-wide">Equipment</h3>
@@ -111,7 +135,11 @@ export default async function DashboardPage() {
                             <span className="w-2 h-8 bg-primary rounded-full" />
                             NEW BREW
                         </h2>
-                        <BrewWorkflow />
+                        <BrewWorkflow
+                            beans={beans || []}
+                            methods={methods || []}
+                            grinders={grinders || []}
+                        />
                     </div>
 
                     {/* Recent Logs - 1 Column */}
@@ -121,7 +149,7 @@ export default async function DashboardPage() {
                                 <span className="w-2 h-8 bg-muted rounded-full" />
                                 DATA LOGS
                             </h2>
-                            <Link href="/logs" className="text-sm text-muted-foreground hover:text-primary transition-colors uppercase tracking-wider">
+                            <Link href="/logs" className="text-sm text-muted-foreground hover:text-primary transition-colors uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full px-1">
                                 View All →
                             </Link>
                         </div>
@@ -131,6 +159,6 @@ export default async function DashboardPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }

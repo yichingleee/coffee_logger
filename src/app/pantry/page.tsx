@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
@@ -7,15 +8,13 @@ import { AddBeanForm } from '@/components/pantry/AddBeanForm'
 import { BeanList } from '@/components/pantry/BeanList'
 
 export default async function PantryPage() {
-    const supabase = await createClient()
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getUser()
 
     if (!user) {
         redirect('/login')
     }
+
+    const supabase = await createClient()
 
     const { data: beans } = await supabase
         .from('beans')
@@ -24,13 +23,17 @@ export default async function PantryPage() {
         .order('created_at', { ascending: false })
 
     return (
-        <div className="min-h-screen bg-background">
+        <main id="main" tabIndex={-1} className="min-h-screen bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-12">
                     <div className="flex items-center gap-2 sm:gap-6 flex-1 min-w-0 mr-2">
-                        <Link href="/dashboard" className="p-2 sm:p-3 hover:bg-white/5 rounded-full transition-colors border border-transparent hover:border-white/10 group flex-shrink-0">
-                            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                        <Link
+                            href="/dashboard"
+                            aria-label="Back to dashboard"
+                            className="p-2 sm:p-3 hover:bg-white/5 rounded-full transition-colors border border-transparent hover:border-white/10 group flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        >
+                            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
                         </Link>
                         <div className="flex flex-col min-w-0 flex-1">
                             <h1 className="text-xl sm:text-4xl font-display font-bold uppercase tracking-wide sm:tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
@@ -58,6 +61,6 @@ export default async function PantryPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }

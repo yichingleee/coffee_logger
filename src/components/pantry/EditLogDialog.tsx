@@ -16,7 +16,10 @@ import { useRouter } from 'next/navigation'
 import { Database } from '@/types/database.types'
 import { Pencil } from 'lucide-react'
 
-type Log = Database['public']['Tables']['logs']['Row']
+type Log = Pick<
+    Database['public']['Tables']['logs']['Row'],
+    'id' | 'bloom_time' | 'dose' | 'ratio' | 'grind_setting' | 'total_time'
+>
 
 interface EditLogDialogProps {
     log: Log

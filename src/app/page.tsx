@@ -17,7 +17,11 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center px-4 py-20 relative z-10">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex-grow flex flex-col items-center px-4 py-20 relative z-10"
+      >
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
           <div className="text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-black tracking-tight md:tracking-tighter leading-[1.05] md:leading-[0.95] text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-accent mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -44,7 +48,7 @@ export default function Home() {
             <div className="h-10 w-10 mb-4 bg-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <span className="font-display font-bold text-primary-foreground">01</span>
             </div>
-            <h3 className="text-xl font-display font-bold mb-2">Inventory + Ratio Control</h3>
+            <h2 className="text-xl font-display font-bold mb-2">Inventory + Ratio Control</h2>
             <p className="text-muted-foreground text-sm">
               Track every bean in your pantry and dial in the perfect extraction with auto-calculated water weight.
             </p>

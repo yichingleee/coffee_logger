@@ -1,17 +1,11 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { Database } from '@/types/database.types'
+import { LogWithRelations } from '@/types/logs'
 import { LogCard } from '@/components/dashboard/LogCard'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { X, SlidersHorizontal } from 'lucide-react'
-
-type LogWithRelations = Database['public']['Tables']['logs']['Row'] & {
-    beans: { name: string; roaster: string | null } | null
-    grinders: { name: string } | null
-    methods: { name: string } | null
-}
 
 export function LogHistory({ initialLogs }: { initialLogs: LogWithRelations[] }) {
     const [selectedBean, setSelectedBean] = useState<string>('all')
