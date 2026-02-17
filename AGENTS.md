@@ -1,25 +1,59 @@
-# Repository Guidelines
+# Coffee Logger - Agent Guide
 
-## Project Structure & Module Organization
-`src/app` houses the App Router; domain folders (dashboard, logs, pantry, etc.) include their own route, loading, and layout files. Shared UI lives in `src/components`, contexts in `src/context`, helpers/Supabase clients in `src/lib`, and types in `src/types`. Tailwind globals stay in `src/app/globals.css`, while `public/`, `supabase/`, and `scripts/` hold assets, SQL/migrations, and automation.
+## Quick Commands
 
-## Build, Test, and Development Commands
-Install via `npm install`. Use `npm run dev` for hot reload during development, `npm run lint` to check code quality (configured in `.eslintrc.json`), and `npm run build && npm start` for production validation. Use `npm run test:smoke` to boot `next start` and hit core routes (`/`, `/dashboard`, `/logs`, etc.) to catch server/client boundary issues; customize via `SMOKE_PORT`, `SMOKE_BASE_URL`, or `SMOKE_ROUTES` (comma-separated). Use `npm run check` for the full gate (`lint + build + smoke`). Note: `npm run build` integrates ESLint and TypeScript checks—it will fail on lint errors. Apply Supabase migrations before testing branches that touch data.
+| Task | Command |
+|------|---------|
+| Dev server | `npm run dev` |
+| Lint | `npm run lint` |
+| Build (includes type-check + lint) | `npm run build` |
+| Smoke tests | `npm run test:smoke` |
+| Full gate | `npm run check` |
+| Doc lint | `npm run lint:docs` |
 
 ## Standard Workflow
-1. Start `npm run dev` to get rapid visual feedback (ignores lint errors, enabling fast iteration). 2. Verify the affected UI flow visually in the browser. 3. Run `npm run lint` to catch code quality issues. 4. Run `npm run build` for full production validation (type-check + lint + build). 5. Run `npm run test:smoke` (or `npm run check`) to catch server/client boundary or runtime route errors. 6. Re-run data import scripts when migrations or pantry files change.
 
-## Coding Style & Naming Conventions
-Use TypeScript with React Server/Client components. Favor PascalCase component files (`src/components/BrewCard.tsx`), camelCase hooks/utilities, and SCREAMING_SNAKE_CASE only for environment constants. Keep components focused, extract reusable logic into `src/lib`, and rely on Tailwind utilities plus the CSS variables in `globals.css`; ESLint supplies formatting.
+1. `npm run dev` — iterate visually
+2. Verify UI flow in browser
+3. `npm run lint` — code quality
+4. `npm run build` — production validation
+5. `npm run test:smoke` — runtime route check
 
-## Testing Guidelines
-Every change must pass visual verification in `npm run dev`, then `npm run lint`, `npm run build`, and the smoke check (`npm run test:smoke` or `npm run check`). For UI changes, always test visually first—catch layout and interaction issues before worrying about lint. Colocate Jest + React Testing Library specs and Playwright `.spec.ts` files beside each route (for example `src/app/logs/__tests__/logs.spec.tsx`). Include screenshots or screen recordings for UI changes in PRs.
+## Project Layout
 
-## Commit & Pull Request Guidelines
-Write short, imperative commit subjects (`feat: add grinder calibration view`) and mention linked issues or migration IDs in the body. PRs should describe the user impact, list verification commands (`npm run dev`, `npm run lint`, `npm run build`), include visual evidence (screenshots/recordings) for UI tweaks, and stay tightly scoped.
+```
+src/app/<domain>/      Domain routes (dashboard, logs, pantry, grinders, methods)
+src/components/        Shared UI components
+src/context/           React contexts (UnitContext)
+src/lib/               Helpers, Supabase clients, server actions
+src/types/             TypeScript types (auto-generated + domain)
+supabase/migrations/   SQL migrations (apply sequentially)
+scripts/               Automation (smoke tests, data import, doc lint)
+```
 
-## Supabase & Configuration Tips
-Keep Supabase URL, anon key, and third-party tokens in `.env.local`. Run migrations from `supabase/migrations` sequentially, refresh pantry data with `scripts/parse_notion_to_sql.py` when beans or recipes change, and commit new migrations with the feature that depends on them.
+## Conventions
 
-## Architecture & Future Evolution
-Favor self-contained domain modules under `src/app/<domain>` with their components, hooks, and loaders, while shared infrastructure lives in adapters (`src/lib/supabase`). Add feature flags or environment toggles for experiments and update `docs/` whenever a data contract changes.
+- TypeScript, React Server/Client components
+- PascalCase component files, camelCase utilities, SCREAMING_SNAKE for env constants
+- Tailwind utilities + CSS variables from `src/app/globals.css`
+- Commits: short imperative subjects (`feat: add grinder view`)
+- PRs: describe user impact, include visual evidence for UI changes
+
+## Key Docs
+
+| Topic | Location |
+|-------|----------|
+| Product spec | [docs/product-specs/spec.md](docs/product-specs/spec.md) |
+| Design system | [docs/design-docs/design-system.md](docs/design-docs/design-system.md) |
+| Active plans | [docs/exec-plans/active/](docs/exec-plans/active/) |
+| Completed plans | [docs/exec-plans/completed/](docs/exec-plans/completed/) |
+| Tech debt | [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md) |
+| Generated docs | [docs/generated/](docs/generated/) |
+
+## Supabase
+
+- Env vars in `.env.local` (see `.env.example`)
+- Run migrations from `supabase/migrations/` before testing data changes
+- Refresh seed data: `python scripts/parse_notion_to_sql.py`
+- Commit new migrations with the feature that depends on them
+- Avoid pinning platform-specific SWC packages (breaks Vercel builds)
