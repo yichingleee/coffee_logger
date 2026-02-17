@@ -52,7 +52,7 @@ export default async function PantryPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column: Add New Bean */}
                     <div className="lg:col-span-1">
-                        <AddBeanForm />
+                        <AddBeanForm beans={beans || []} />
                     </div>
 
                     {/* Right Column: List */}

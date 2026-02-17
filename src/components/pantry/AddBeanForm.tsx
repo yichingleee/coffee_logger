@@ -1,15 +1,23 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
+import type { Database } from '@/types/database.types'
 
-export function AddBeanForm() {
+type Bean = Database['public']['Tables']['beans']['Row']
+
+interface AddBeanFormProps {
+    beans: Bean[]
+}
+
+export function AddBeanForm({ beans }: AddBeanFormProps) {
     const [name, setName] = useState('')
     const [roaster, setRoaster] = useState('')
     const [country, setCountry] = useState('')
@@ -28,12 +36,48 @@ export function AddBeanForm() {
     const [mouthfeel, setMouthfeel] = useState('')
     const [colorTone, setColorTone] = useState('')
 
+    // Copy from existing bean
+    const [roasterFilter, setRoasterFilter] = useState('all')
+    const [countryFilter, setCountryFilter] = useState('all')
+    const [selectedBeanId, setSelectedBeanId] = useState('')
+
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const router = useRouter()
     const supabase = createClient()
+
+    const uniqueRoasters = useMemo(() =>
+        ([...new Set(beans.map(b => b.roaster).filter(Boolean))] as string[]).sort((a, b) => a.localeCompare(b)),
+        [beans]
+    )
+
+    const uniqueCountries = useMemo(() =>
+        ([...new Set(beans.map(b => b.country).filter(Boolean))] as string[]).sort((a, b) => a.localeCompare(b)),
+        [beans]
+    )
+
+    const filteredBeans = useMemo(() =>
+        beans.filter(b =>
+            (roasterFilter === 'all' || b.roaster === roasterFilter) &&
+            (countryFilter === 'all' || b.country === countryFilter)
+        ),
+        [beans, roasterFilter, countryFilter]
+    )
+
+    const handleCopyBean = (beanId: string) => {
+        setSelectedBeanId(beanId)
+        const bean = beans.find(b => b.id === beanId)
+        if (!bean) return
+        setName(bean.name)
+        setRoaster(bean.roaster || '')
+        setCountry(bean.country || '')
+        setRegion(bean.region || '')
+        setProducer(bean.producer || '')
+        setVariety(bean.variety || '')
+        setProcess(bean.process || '')
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -91,6 +135,10 @@ export function AddBeanForm() {
             setMouthfeel('')
             setColorTone('')
 
+            setRoasterFilter('all')
+            setCountryFilter('all')
+            setSelectedBeanId('')
+
             router.refresh()
         } catch (err) {
             console.error(err)
@@ -125,6 +173,55 @@ export function AddBeanForm() {
             {isOpen && (
                 <CardContent id="add-bean-panel">
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Copy from existing bean */}
+                        {beans.length > 0 && (
+                            <div className="border-b pb-4">
+                                <h3 className="text-lg font-medium mb-3">Copy from existing bean</h3>
+                                <div className="grid grid-cols-2 gap-3 mb-3">
+                                    <div className="space-y-1">
+                                        <Label htmlFor="roaster-filter">Roaster</Label>
+                                        <Select value={roasterFilter} onValueChange={setRoasterFilter}>
+                                            <SelectTrigger id="roaster-filter">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="all">All</SelectItem>
+                                                {uniqueRoasters.map(r => (
+                                                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Label htmlFor="country-filter">Country</Label>
+                                        <Select value={countryFilter} onValueChange={setCountryFilter}>
+                                            <SelectTrigger id="country-filter">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="all">All</SelectItem>
+                                                {uniqueCountries.map(c => (
+                                                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <Select value={selectedBeanId} onValueChange={handleCopyBean}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a bean to copy..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {filteredBeans.map(b => (
+                                            <SelectItem key={b.id} value={b.id}>
+                                                {b.roaster ? `"${b.name}" — ${b.roaster}` : b.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
                         {/* Basic Info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
